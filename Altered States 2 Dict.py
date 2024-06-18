@@ -90,16 +90,14 @@ state_population = {
     "Wyoming": 576851,
 }
 
-# Generate the letter matrix
+
 matrix = generate_letter_matrix()
 print("Original matrix:")
 print_matrix(matrix)
 
-# Explore from the cell (0,0) and check for valid state names
 starting_x, starting_y = 0, 0
 found_states = explore_from_cell(matrix, starting_x, starting_y, state_population)
 print("\nFound state names from (0,0):")
 for state in found_states:
     print(f"{state}: {state_population[state]}")
 
-range(0, 100, 5)
