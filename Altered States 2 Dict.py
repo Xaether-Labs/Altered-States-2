@@ -1,3 +1,42 @@
+import random
+import string
+
+# Function to generate a 5x5 matrix with random letters from A-Z, excluding 'Q'
+def generate_letter_matrix(size=5):
+    letters = [letter for letter in string.ascii_uppercase if letter != 'Q']
+    return [[random.choice(letters) for _ in range(size)] for _ in range(size)]
+
+# Function to print the matrix
+def print_matrix(matrix):
+    for row in matrix:
+        print(' '.join(row))
+
+# Check if position is valid within the matrix
+def is_valid_position(x, y, size):
+    return 0 <= x < size and 0 <= y < size
+
+# DFS to explore paths using King's moves and check for valid state names
+def explore_from_cell(matrix, x, y, state_population):
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), 
+                  (-1, -1), (-1, 1), (1, -1), (1, 1)]
+    found_states = set()
+    size = len(matrix)
+    
+    def dfs(cx, cy, path):
+        word = ''.join(path)
+        if word in state_population:
+            found_states.add(word)
+        for dx, dy in directions:
+            nx, ny = cx + dx, cy + dy
+            if is_valid_position(nx, ny, size):
+                path.append(matrix[nx][ny])
+                dfs(nx, ny, path)
+                path.pop()
+
+    dfs(x, y, [matrix[x][y]])
+    return found_states
+
+# Dictionary with state names and populations
 state_population = {
     "California": 39538223,
     "Texas": 29145505,
@@ -51,9 +90,16 @@ state_population = {
     "Wyoming": 576851,
 }
 
-general_population = 0
+# Generate the letter matrix
+matrix = generate_letter_matrix()
+print("Original matrix:")
+print_matrix(matrix)
 
-for x in state_population.values():
-    general_population += x
+# Explore from the cell (0,0) and check for valid state names
+starting_x, starting_y = 0, 0
+found_states = explore_from_cell(matrix, starting_x, starting_y, state_population)
+print("\nFound state names from (0,0):")
+for state in found_states:
+    print(f"{state}: {state_population[state]}")
 
-print(general_population)
+range(0, 100, 5)
